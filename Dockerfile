@@ -15,9 +15,11 @@ RUN export DEPS="bash nano git uuid-runtime zstd fuse" && \
 
 # Build and clean
 COPY scripts /opt/scripts
-RUN if [ "$MODE" = "build" ]; then \
+RUN if [ "$MODE" = "build" ] || [ "$MODE" = "clean" ]; then \
   bash /opt/scripts/build.sh; \
-  elif [ "$MODE" = "clean" ]; then \
+  fi
+
+RUN if [ "$MODE" = "clean" ]; then \
   bash /opt/scripts/clean.sh; \
   fi
 
