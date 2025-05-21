@@ -12,10 +12,14 @@ git submodule update --init --recursive
 
 # Determine triplet to use
 cd /MEGAcmd
-triplet=$(uname -m | sed -e 's/x86_64/x64-linux/' -e 's/aarch64/arm64-linux/')
+case "$(uname -m)" in
+  x86_64) triplet="-DVCPKG_TARGET_TRIPLET=x64-linux" ;;
+  aarch64) triplet="-DVCPKG_TARGET_TRIPLET=arm64-linux" ;;
+  *) triplet="" ;;
+esac
 
 # Build MEGAcmd dependencies
-cmake -B /tmp/build/ -DCMAKE_BUILD_TYPE=Release -DUSE_FREEIMAGE=OFF -DVCPKG_TARGET_TRIPLET="$triplet"
+cmake -B /tmp/build/ -DCMAKE_BUILD_TYPE=Release -DUSE_FREEIMAGE=OFF $triplet
 
 # Build MEGAcmd code
 cmake --build /tmp/build/
