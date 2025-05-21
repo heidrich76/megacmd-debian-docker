@@ -1,0 +1,13 @@
+services:
+  mega_build:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODE: build
+    container_name: debmega
+    volumes:
+      - ./scripts:/scripts
+    working_dir: /scripts
+    stdin_open: true
+    tty: true
