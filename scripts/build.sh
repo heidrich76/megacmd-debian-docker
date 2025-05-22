@@ -25,4 +25,4 @@ cmake -B /tmp/build/ -DCMAKE_BUILD_TYPE=Release -DUSE_FREEIMAGE=OFF $triplet
 cmake --build /tmp/build/
 
 # Install MEGAcmd
-cmake --install /tmp/build/
+cmake --install /tmp/build/ --prefix /tmp/mega_install

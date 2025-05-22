@@ -1,23 +1,36 @@
 # Docker Container for Building MEGAcmd under Debian Linux
 
-This container is a proof of concept, which builds MEGAcmd tool in a Debian container using VCPKG as build system.
+This container is a proof of concept for building the MEGAcmd tool on Debian Linux.
 
-The files are just provided as-is. Use them at your own risk.
+The files are provided as-is. Use them at your own risk.
 
-Build was tested under x64 and arm64 Debian container using Windows and MacOS respectively.
-
-
-## Getting started
-- Docker commands to build and start:
-    ```bash
-    docker-compose up --build -d
-    docker exec -it debmega /bin/bash
-    ```
+Images for **arm64** and **amd64** are automatically built and published on [Docker Hub](https://hub.docker.com/r/jensheidrich76/megacmd-debian-docker) under the repository `jensheidrich76/megacmd-debian-docker`.
 
 
-# Links
-- MEGAcmd source code and build instructions: https://github.com/meganz/MEGAcmd
+
+## Getting Started
+
+* **Build and start locally:**
+
+  ```bash
+  docker-compose up --build -d
+  docker exec -it megacmd-debian-docker /bin/bash
+  ```
+
+* **Retrieve the latest image from Docker Hub:**
+
+  ```bash
+  docker run -it --pull always --entrypoint /bin/sh jensheidrich76/megacmd-debian-docker:latest
+  ```
 
 
-# Changes to original build chain
-- Exclude `freeimage` from build with option `-DUSE_FREEIMAGE=OFF` (has issues building under Alpine).
+
+## Links
+
+* [MEGAcmd source code and build instructions](https://github.com/meganz/MEGAcmd)
+
+
+
+## Changes to the Original Build Chain
+
+* Disabled `freeimage` in the build using `-DUSE_FREEIMAGE=OFF` (due to build issues on Debian arm64).

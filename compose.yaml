@@ -3,11 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        MODE: build
-    container_name: debmega
-    volumes:
-      - ./scripts:/scripts
-    working_dir: /scripts
+      target: final
+    container_name: megacmd-debian-docker
     stdin_open: true
     tty: true

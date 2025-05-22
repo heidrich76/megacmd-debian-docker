@@ -1,26 +1,23 @@
-FROM debian:12-slim
+# Basis for running application
+FROM debian:12-slim AS base
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  bash fuse git nano zstd
 
-ARG MODE=none
 
-# Update packages, no upgrade because of potential arm64 emulation
-RUN apt-get update
-
-# Store required packages
-RUN export DEPS="bash nano git uuid-runtime zstd fuse" && \
-  export BUILD_DEPS="ccache jq cmake zip pkg-config curl python3 libgtest-dev libgmock-dev g++ \
-  make nasm unzip autoconf autoconf-archive ca-certificates automake ninja-build libfuse-dev" && \
-  apt-get install -y --no-install-recommends $DEPS $BUILD_DEPS && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
-
-# Build and clean
+# Basis for building application
+FROM base AS builder-base
+RUN apt-get install -y --no-install-recommends \
+  autoconf autoconf-archive automake ca-certificates ccache cmake curl g++ \
+  jq libfuse-dev libgmock-dev libgtest-dev make nasm ninja-build pkg-config \
+  python3 unzip zip
 COPY scripts /opt/scripts
-RUN if [ "$MODE" = "build" ] || [ "$MODE" = "clean" ]; then \
-  bash /opt/scripts/build.sh; \
-  fi
 
-RUN if [ "$MODE" = "clean" ]; then \
-  bash /opt/scripts/clean.sh; \
-  fi
 
-CMD ["/bin/bash"]
+# Actual build of application
+FROM builder-base AS builder
+RUN bash /opt/scripts/build.sh
+
+
+# Final stage
+FROM base AS final
+COPY --from=builder /tmp/mega_install /
